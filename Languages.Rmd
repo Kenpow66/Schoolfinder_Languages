@@ -42,6 +42,7 @@ Languages <- read.csv('2023-1221_SchoolFinder_CER_Languages.csv', stringsAsFacto
   mutate(campus_number = sprintf("%03d", campus_number))
 ### Rename Columns to specific Languag
 
+names(Languages)[1] <- "entity_id"
 names(Languages)[2] <- "American Sign Language"
 names(Languages)[3] <- "Arabic"
 names(Languages)[4] <- "Chinese"
@@ -55,13 +56,38 @@ names(Languages)[11] <- "Korean"
 names(Languages)[12] <- "Latin"
 names(Languages)[13] <- "Russian"
 names(Languages)[14] <- "Spanish"
-names(Languages)[15] <- " Vietnamese"
+names(Languages)[15] <- "Vietnamese"
+
+Languages <- Languages %>%
+ filter(entity_id!= " NA")
+#Pivot longer but keeping the campus ID
+  languages_long <- pivot_longer(Languages, cols = -entity_id, names_to = "value", values_to = "Offered" ) 
+  
+#Create structure to include all campuses regardless of programmed offered
+  all_campuses <- languages_long %>% distinct(entity_id)
+  
+  #Filter by programs offered then join with all_campuses to create final list
+  languages_long <- filter(languages_long, Offered == 1)
+  languages_final <- left_join(all_campuses, languages_long, by = "entity_id")
+  
+    #Clean CampusID add type column, fix NA responses, rename columns, and rearrange
+  languages_final <- languages_final %>% 
+    mutate(type = "languages",
+           value = ifelse(is.na(value), "Languages Not Offered", value)) %>% 
+    select(entity_id, type, value) %>% 
+    arrange(entity_id)
+
+install.packages('writexl')
+library(writexl)
+
+write_xlsx(languages_final, 'R:\\Specialists Transfer\\Ken\\GitHub\\Schoolfinder_Languages\\Languages_final.xlsx')
+
+write.csv(languages_final, "R:\\Specialists Transfer\\Ken\\GitHub\\Schoolfinder_Languages\\Languages_final.csv", row.names=FALSE)
+```
+
+
+
 
 
 
 ```
-
-```{r American Sign language}
-## Subset of data file
-library(tidyverse)
-
