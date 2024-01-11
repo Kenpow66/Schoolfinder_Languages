@@ -38,7 +38,7 @@ library(tidyverse)
 
 ##Load csv and create a dataframe and add leading zeros to campus number
 
-Languages <- read.csv('2023-1221_SchoolFinder_CER_Languages.csv', stringsAsFactors = FALSE, header = TRUE) %>%
+Languages <- read.csv('Languages_Native.csv', stringsAsFactors = FALSE, header = TRUE) %>%
   mutate(campus_number = sprintf("%03d", campus_number))
 ### Rename Columns to specific Languag
 
@@ -61,7 +61,8 @@ names(Languages)[15] <- "Vietnamese"
 Languages <- Languages %>%
  filter(entity_id!= " NA")
 #Pivot longer but keeping the campus ID
-  languages_long <- pivot_longer(Languages, cols = -entity_id, names_to = "value", values_to = "Offered" ) 
+languages_long <- pivot_longer(Languages, 
+                  cols = -entity_id, names_to = "value", values_to = "Offered" ) 
   
 #Create structure to include all campuses regardless of programmed offered
   all_campuses <- languages_long %>% distinct(entity_id)
