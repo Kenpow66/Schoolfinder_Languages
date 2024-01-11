@@ -58,8 +58,7 @@ names(Languages)[13] <- "Russian"
 names(Languages)[14] <- "Spanish"
 names(Languages)[15] <- "Vietnamese"
 
-Languages <- Languages %>%
- filter(entity_id!= " NA")
+Languages <- na.omit(Languages)
 #Pivot longer but keeping the campus ID
 languages_long <- pivot_longer(Languages, 
                   cols = -entity_id, names_to = "value", values_to = "Offered" ) 
