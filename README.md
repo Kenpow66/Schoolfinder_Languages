@@ -1,2 +1,2 @@
 # Schoolfinder_Languages
-Clean and transform choices on Sports availability
+Clean and transform choices on Languageavailability
